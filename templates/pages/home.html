@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+Welcome quixotic
+
+<script>
+    const xhr = new XMLHttpRequest() // xhr = some_class
+    const method = "GET" // get method
+    const url = "/tweets"
+    const responsetype = "json"
+
+    xhr.responseType = responsetype
+    xhr.open(method, url)
+    xhr.onload = function() {
+        console.log(xhr.response)
+    }
+    xhr.send()
+
+</script>
+
+{% endblock content %}
