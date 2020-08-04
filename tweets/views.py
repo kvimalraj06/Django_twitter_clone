@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+import random
 
 from .models import Tweets
 
@@ -9,9 +10,8 @@ def home_view(request, *args, **kwargs):
 
 def list_view(request, *args, **kwargs):
     qs = Tweets.objects.all()
-    tweet_list = [{"id":x.id, "content": x.content} for x in qs]
+    tweet_list = [{"id":x.id, "content": x.content, "likes" : random.randint(10, 100)} for x in qs]
     data = {
-        "tempted": "true",
         "response" : tweet_list
     }
     return JsonResponse(data)

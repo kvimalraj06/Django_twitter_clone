@@ -1,18 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Welcome quixotic
+Tweets
+
+<div id = "tweets">
+    Empty
+</div>
 
 <script>
+    var tweets = document.getElementById("tweets") 
+
+
     const xhr = new XMLHttpRequest() // xhr = some_class
     const method = "GET" // get method
     const url = "/tweets"
     const responsetype = "json"
 
+    function LikeBtn(tweet){
+
+        return "<button class= 'btn btn-primary'>" + tweet.likes + " " + "Like</button>"
+
+    }
+
+    function Tweetformat(tweet){
+
+        var formatted_tweet = "<div class = 'mb-4' id = 'tweet-" + tweet.id +
+         "'><p>" + tweet.content + "</p><div class = 'btn-group'>" +
+         LikeBtn(tweet) +
+         "</div></div>"
+        return formatted_tweet
+    }
+
+
     xhr.responseType = responsetype
     xhr.open(method, url)
     xhr.onload = function() {
-        console.log(xhr.response)
+        server_response = xhr.response
+        var list_items =server_response.response // to get the response key values from list view
+        var finalstr = ""
+        var i;
+        for (i=0; i<list_items.length; i++){
+            var current_item = Tweetformat(list_items[i])
+            finalstr += current_item 
+        }
+        tweets.innerHTML = finalstr
+
     }
     xhr.send()
 
