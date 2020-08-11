@@ -36,21 +36,26 @@
         const url = myform.getAttribute('action')
         const method = myform.getAttribute('method')
         const xhr = new XMLHttpRequest()
+        xhr.responseType = "json"
         xhr.open(method, url)
+        xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.onload = function(){
-            const server_response = xhr.response
-            console.log(server_response)
-            const tweet_el = document.getElementById("tweets")
-            Load_tweets(tweet_el)
-            myform.reset()
+            if (xhr.status === 201){
+                const new_tweet= xhr.response
+                const new_tweet_El = Tweetformat(new_tweet)
+                const oghtml = tweet_container_el.innerHTML
+                tweet_container_el.innerHTML = new_tweet_El + oghtml
+            }
+        myform.reset()
         }
         xhr.send(form_data)
     }
 
 
-    const tweet_el = document.getElementById("tweets")
+    const tweet_container_el = document.getElementById("tweets")
 
-    function Load_tweets(tweet_el){
+    function Load_tweets(tweet_container_el){
         const xhr = new XMLHttpRequest() // xhr = some_class
         const method = "GET" // get method
         const url = "/tweets"
@@ -66,13 +71,13 @@
                 var current_item = Tweetformat(list_items[i])
                 finalstr += current_item 
             }
-            tweet_el.innerHTML = finalstr
+            tweet_container_el.innerHTML = finalstr
 
         }
         xhr.send()
 
     }
-    Load_tweets(tweet_el) 
+    Load_tweets(tweet_container_el) 
 
     function LikeHandler(tweet_id, cur_tweet_count){
         //tweet.likes += 1

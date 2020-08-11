@@ -13,9 +13,8 @@ class TweetForm(forms.ModelForm):
     def clean_content(self):
         content = self.cleaned_data.get("content")
         stripped_content = content.strip()
-        print("content is", content)
         if len(content) > max_tweet_length:
             raise forms.ValidationError("This tweet is too long")
-        elif content == "" and stripped_content == "":
+        elif content == "" or stripped_content == "":
             raise forms.ValidationError("The tweet should not be empty")
         return content
