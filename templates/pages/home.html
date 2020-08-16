@@ -11,6 +11,7 @@
 <div class = "row mb-3">
     <div class = "col-md-4 mx-auto col-10">
         <form class = "form" id = "form_element" method = "POST" action = "/tweet_create/">{% csrf_token %}
+            <div class = "d-none alert alert-danger" id = "tweet_format_error"></div>
             <input type='hidden' value= '/' name = 'next' />
             <textarea required class='form-control mb-1' name = 'content' placeholder="your tweet"></textarea>
             <button type='submit' class= 'btn btn-primary'>Tweet</button>
@@ -27,6 +28,17 @@
 <script>
     const form_el = document.getElementById("form_element")
 
+    function handletweetformaterror(msg, display){
+        var myerrordiv = document.getElementById("tweet_format_error")
+        if (display == true){
+            myerrordiv.setAttribute("class", "d-block alert alert-danger")
+            myerrordiv.innerText = msg
+        }
+        else{
+            myerrordiv.setAttribute("class", "d-none alert alert-danger")
+        }
+    }
+
     form_el.addEventListener("submit", handletweetcreateformsubmit)
 
     function handletweetcreateformsubmit(event){
@@ -42,12 +54,43 @@
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.onload = function(){
             if (xhr.status === 201){
+                handletweetformaterror("", false)
                 const new_tweet= xhr.response
                 const new_tweet_El = Tweetformat(new_tweet)
                 const oghtml = tweet_container_el.innerHTML
                 tweet_container_el.innerHTML = new_tweet_El + oghtml
+                myform.reset()
             }
-        myform.reset()
+            else if (xhr.status === 400){
+                const errjson = xhr.response
+                const err_msg_arr = errjson.content
+                var err_msg_content;
+                if (err_msg_arr){
+                    err_msg_content = err_msg_arr[0]
+                    if (err_msg_content){
+                        handletweetformaterror(err_msg_content, true)
+                        myform.reset()
+                    }
+                    else{
+                        alert("error occured please try again")
+                    }
+                }
+                else{
+                    alert("error occured please try again")
+                }
+            }
+            else if (xhr.status === 500){
+                alert("There is a server error")
+
+            }
+            else if (xhr.status === 401){
+                handletweetformaterror("You must login to create tweet",true)
+                myform.reset()
+                window.location.href = "login"
+            }
+        }
+        xhr.onerror = function(){
+            alert("Error occured please try again")
         }
         xhr.send(form_data)
     }
