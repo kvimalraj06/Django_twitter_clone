@@ -86,7 +86,11 @@
             else if (xhr.status === 401){
                 handletweetformaterror("You must login to create tweet",true)
                 myform.reset()
-                window.location.href = "login"
+                window.location.href = "/login"
+            }
+            else if (xhr.status === 403){
+                handletweetformaterror("You must login to create tweet",true)
+                myform.reset()
             }
         }
         xhr.onerror = function(){
@@ -107,7 +111,7 @@
         xhr.open(method, url)
         xhr.onload = function() {
             server_response = xhr.response
-            var list_items =server_response.response // to get the response key values from list view
+            var list_items =server_response // to get the response key values from list view
             var finalstr = ""
             var i;
             for (i=0; i<list_items.length; i++){

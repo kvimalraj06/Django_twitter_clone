@@ -9,6 +9,11 @@ class Tweets(models.Model):
     content = models.TextField(blank=True, null=True) # to store content or text
     image = models.FileField(upload_to="image/", blank=True, null=True) # To store images
 
+
+    class Meta:
+        ordering = ['-id']
+
+
     def serialize(self):
         return {
             "id": self.id,
