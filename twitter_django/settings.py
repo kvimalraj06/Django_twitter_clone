@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 LOGIN_URL = "/login"
+TWEET_ACTION_LIST = ["like","unlike","retweet"]
 
 
 # Application definition
