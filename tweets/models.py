@@ -9,7 +9,6 @@ class TweetLike(models.Model):
     tweet = models.ForeignKey('Tweets', on_delete = models.CASCADE) # for below tweets modele
     timestamp = models.DateTimeField(auto_now_add=True) # adding time of liking
 
-
 class Tweets(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE) # assigned users an id,If user is deleted the tweets of that user also deleted(on_delete)
     content = models.TextField(blank=True, null=True) # to store content or text

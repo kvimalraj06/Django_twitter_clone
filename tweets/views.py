@@ -26,7 +26,7 @@ def tweet_create_view(request, *args, **kwargs):
     serializer = TweetSerializer(data = request.POST or None) # instance for serializer
     if serializer.is_valid(raise_exception=True):
         serializer.save(user = request.user) # saving the tweet to particular user
-    serialized_data_with_likes = {**serializer.data, **{"likes":random.randint(0,100)}}
+    serialized_data_with_likes = {**serializer.data, **{"likes":0}}
     return Response(serialized_data_with_likes, status=201)# created items
 
 @api_view(["GET"])
@@ -62,6 +62,7 @@ def tweet_action_view(request,*args, **kwargs):
         obj = qs.first()
         if action == "unlike":
             obj.likes.remove(request.user)
+            return Response({},status = 200)
         elif action == "like":
             serializer = TweetSerializer(obj)
             if not request.user in obj.likes.all():
